@@ -1,0 +1,11 @@
+{
+  "name": "classroom-pro-v5",
+  "version": "5.0.0",
+  "private": true,
+  "description": "Classroom Pro timetable platform",
+  "scripts": {
+    "serve": "npx serve public",
+    "deploy": "npx firebase-tools deploy",
+    "deploy:rules": "npx firebase-tools deploy --only firestore:rules"
+  }
+}

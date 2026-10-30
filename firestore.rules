@@ -1,0 +1,96 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function myDoc() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
+    function isTeacher() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && myDoc().role == 'teacher';
+    }
+    function isStr(v, min, max) { return v is string && v.size() >= min && v.size() <= max; }
+    function validTime(v) { return v is string && v.matches('^([01][0-9]|2[0-3]):[0-5][0-9]$'); }
+    function validYear(v) { return v is int && v >= 1 && v <= 4; }
+
+    // ---------- users: self-registration as student or teacher ----------
+    function validStudent(d) {
+      return d.keys().hasOnly(['uid','name','email','role','department','year','rollNo','createdAt'])
+        && d.keys().hasAll(['uid','name','email','role','department','year','rollNo','createdAt'])
+        && d.role == 'student' && validYear(d.year) && isStr(d.rollNo, 1, 30);
+    }
+    function validTeacher(d) {
+      return d.keys().hasOnly(['uid','name','email','role','department','createdAt'])
+        && d.keys().hasAll(['uid','name','email','role','department','createdAt'])
+        && d.role == 'teacher';
+    }
+    function validSignup(d) {
+      return d.uid == request.auth.uid
+        && d.email == request.auth.token.email
+        && isStr(d.name, 2, 80)
+        && isStr(d.department, 2, 60)
+        && d.createdAt == request.time
+        && (validStudent(d) || validTeacher(d));
+    }
+
+    match /users/{userId} {
+      allow get: if signedIn() && request.auth.uid == userId;
+      allow list: if false;
+      allow create: if signedIn() && request.auth.uid == userId && validSignup(request.resource.data);
+      allow update: if signedIn() && request.auth.uid == userId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name','department','year','rollNo'])
+        && isStr(request.resource.data.name, 2, 80)
+        && isStr(request.resource.data.department, 2, 60)
+        && (!('year' in request.resource.data) || validYear(request.resource.data.year));
+      allow delete: if false;
+    }
+
+    // ---------- courses: shared catalog, teachers manage their own ----------
+    function validCourse(d) {
+      return d.keys().hasOnly(['code','name','department','credits','createdBy','createdAt'])
+        && d.keys().hasAll(['code','name','department','credits','createdBy'])
+        && d.createdBy == request.auth.uid
+        && isStr(d.code, 2, 20) && isStr(d.name, 2, 100) && isStr(d.department, 2, 60)
+        && d.credits is int && d.credits >= 1 && d.credits <= 10;
+    }
+    match /courses/{id} {
+      allow read: if signedIn();
+      allow create: if isTeacher() && validCourse(request.resource.data);
+      allow update: if isTeacher() && resource.data.createdBy == request.auth.uid && validCourse(request.resource.data);
+      allow delete: if isTeacher() && resource.data.createdBy == request.auth.uid;
+    }
+
+    // ---------- timetable ----------
+    function validEntry(d) {
+      return d.keys().hasOnly(['courseCode','courseName','department','year','day','start','end','room','teacherId','teacherName','createdAt'])
+        && d.keys().hasAll(['courseCode','courseName','department','year','day','start','end','room','teacherId','teacherName'])
+        && isStr(d.courseCode, 2, 20) && isStr(d.courseName, 2, 100) && isStr(d.department, 2, 60)
+        && validYear(d.year)
+        && d.day in ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+        && validTime(d.start) && validTime(d.end) && d.end > d.start
+        && isStr(d.room, 1, 30) && isStr(d.teacherId, 1, 128) && isStr(d.teacherName, 1, 80);
+    }
+    match /timetable/{id} {
+      allow read: if signedIn();
+      allow create: if isTeacher() && validEntry(request.resource.data) && request.resource.data.teacherId == request.auth.uid;
+      allow update: if isTeacher() && validEntry(request.resource.data)
+        && resource.data.teacherId == request.auth.uid && request.resource.data.teacherId == request.auth.uid;
+      allow delete: if isTeacher() && resource.data.teacherId == request.auth.uid;
+    }
+
+    // ---------- announcements ----------
+    function validAnn(d) {
+      return d.keys().hasOnly(['title','body','audience','authorId','authorName','createdAt'])
+        && d.keys().hasAll(['title','body','audience','authorId','authorName'])
+        && isStr(d.title, 3, 120) && isStr(d.body, 1, 2000)
+        && d.audience in ['all','students','teachers']
+        && d.authorId == request.auth.uid && isStr(d.authorName, 1, 80);
+    }
+    match /announcements/{id} {
+      allow read: if signedIn();
+      allow create: if isTeacher() && validAnn(request.resource.data) && request.resource.data.createdAt == request.time;
+      allow update: if isTeacher() && resource.data.authorId == request.auth.uid && validAnn(request.resource.data);
+      allow delete: if isTeacher() && resource.data.authorId == request.auth.uid;
+    }
+  }
+}

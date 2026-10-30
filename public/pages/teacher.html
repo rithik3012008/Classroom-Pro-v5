@@ -1,0 +1,80 @@
+<!doctype html><html lang="en"><head><title>Teacher — Classroom Pro</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><link rel="icon" href="../icon.svg" type="image/svg+xml"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="../css/app.css">
+</head>
+<body class="gated">
+<div class="app">
+  <aside class="sidebar"><a class="brand" href="../index.html"><span class="brand-mark">C</span>Classroom Pro</a><nav class="nav" aria-label="Navigation">
+    <button type="button" data-view="overview">🏠 Overview</button>
+    <button type="button" data-view="classes">📚 My classes</button>
+    <button type="button" data-view="courses">📖 Courses</button>
+    <button type="button" data-view="announcements">📣 Announcements</button>
+  </nav><div class="me"><div class="who"><span class="avatar" id="avatar">?</span><div><strong id="userName"></strong><small id="userMeta"></small></div></div><button class="btn ghost sm" data-logout type="button">Log out</button></div></aside>
+  <main class="main">
+    <div class="mobile-bar"><a class="brand" href="../index.html"><span class="brand-mark">C</span>Classroom Pro</a><button class="btn ghost sm" data-logout type="button">Log out</button></div>
+    <section class="view" id="view-overview">
+      <div class="head"><h1 id="greet">Hello</h1><p id="dateLabel"></p></div>
+      <div id="nextClass"></div>
+      <div class="stats" id="stats"></div>
+      <div class="card"><h2>Today</h2><div class="list" id="todayList"></div></div>
+      <div class="card"><h2>My week</h2><div class="week" id="weekGrid"></div></div>
+    </section>
+
+    <section class="view" id="view-classes" hidden>
+      <div class="head"><h1>My classes</h1><p>Clashes in room, teacher or student group are blocked automatically.</p></div>
+      <div class="card">
+        <h2 id="ttFormTitle">Add a class</h2>
+        <form id="ttForm" novalidate>
+          <div class="grid">
+            <div class="field full"><label for="course">Course</label><select id="course" name="course" required></select><small id="courseHint"></small></div>
+            <div class="field"><label for="year">Year</label><select id="year" name="year" required></select></div>
+            <div class="field"><label for="day">Day</label><select id="day" name="day" required></select></div>
+            <div class="field"><label for="start">Start</label><input id="start" name="start" type="time" required></div>
+            <div class="field"><label for="end">End</label><input id="end" name="end" type="time" required></div>
+            <div class="field full"><label for="room">Room</label><input id="room" name="room" maxlength="30" required placeholder="e.g. 204 or Lab-2"></div>
+          </div>
+          <div id="ttMsg" class="msg" role="alert" hidden></div>
+          <div id="ttConflicts"></div>
+          <div class="form-actions"><button class="btn primary" type="submit">Add class</button><button class="btn ghost" type="button" id="cancelEdit" hidden>Cancel edit</button></div>
+        </form>
+      </div>
+      <div class="card"><div class="toolbar"><h2>Scheduled classes</h2><button class="btn ghost" id="exportTeacherTimetable" type="button">Export CSV</button></div><div id="myTable"></div></div>
+    </section>
+
+    <section class="view" id="view-courses" hidden>
+      <div class="head"><h1>Courses</h1><p>The shared catalog you pick from when scheduling classes.</p></div>
+      <div class="card">
+        <h2>Add course</h2>
+        <form id="courseForm" novalidate>
+          <div class="grid">
+            <div class="field"><label for="coCode">Course code</label><input id="coCode" name="code" maxlength="20" required placeholder="CS301"></div>
+            <div class="field"><label for="coCredits">Credits</label><input id="coCredits" name="credits" type="number" min="1" max="10" value="3" required></div>
+            <div class="field full"><label for="coName">Course name</label><input id="coName" name="cname" maxlength="100" required placeholder="Database Systems"></div>
+            <div class="field full"><label for="coDept">Department</label><select id="coDept" name="department" required></select></div>
+          </div>
+          <div id="courseMsg" class="msg" role="alert" hidden></div>
+          <div class="form-actions"><button class="btn primary" type="submit">Add course</button></div>
+        </form>
+      </div>
+      <div class="card"><h2>Course catalog</h2><div id="coursesTable"></div></div>
+    </section>
+
+    <section class="view" id="view-announcements" hidden>
+      <div class="head"><h1>Announcements</h1><p>Post updates for students or colleagues.</p></div>
+      <div class="card">
+        <h2>New announcement</h2>
+        <form id="annForm" novalidate>
+          <div class="grid">
+            <div class="field full"><label for="title">Title</label><input id="title" name="title" maxlength="120" required></div>
+            <div class="field full"><label for="body">Message</label><textarea id="body" name="body" maxlength="2000" required></textarea></div>
+            <div class="field"><label for="audience">Audience</label><select id="audience" name="audience"><option value="students">Students</option><option value="all">Everyone</option><option value="teachers">Teachers</option></select></div>
+          </div>
+          <div id="annMsg" class="msg" role="alert" hidden></div>
+          <div class="form-actions"><button class="btn primary" type="submit">Post announcement</button></div>
+        </form>
+      </div>
+      <div class="card"><h2>Recent announcements</h2><div class="field"><label for="teacherAnnSearch">Search announcements</label><input id="teacherAnnSearch" type="search" placeholder="Search title or message…"></div><div class="list" id="annList"></div></div>
+    </section>
+  </main>
+</div>
+<script type="module" src="../js/teacher.js"></script>
+</body></html>

@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><title>Student — Classroom Pro</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><link rel="icon" href="../icon.svg" type="image/svg+xml"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="../css/app.css">
+</head>
+<body class="gated">
+<div class="app">
+  <aside class="sidebar"><a class="brand" href="../index.html"><span class="brand-mark">C</span>Classroom Pro</a><nav class="nav" aria-label="Navigation">
+    <button type="button" data-view="overview">🏠 Overview</button>
+    <button type="button" data-view="timetable">📅 Timetable</button>
+    <button type="button" data-view="announcements">📣 Announcements</button>
+    <button type="button" data-view="profile">👤 Profile</button>
+  </nav><div class="me"><div class="who"><span class="avatar" id="avatar">?</span><div><strong id="userName"></strong><small id="userMeta"></small></div></div><button class="btn ghost sm" data-logout type="button">Log out</button></div></aside>
+  <main class="main">
+    <div class="mobile-bar"><a class="brand" href="../index.html"><span class="brand-mark">C</span>Classroom Pro</a><button class="btn ghost sm" data-logout type="button">Log out</button></div>
+    <section class="view" id="view-overview">
+      <div class="head"><h1 id="greet">Hello</h1><p id="dateLabel"></p></div>
+      <div id="nextClass"></div>
+      <div class="stats" id="stats"></div>
+      <div class="card"><h2>Today</h2><div class="list" id="todayList"></div></div>
+      <div class="card"><h2>Latest announcements</h2><div class="list" id="latestAnn"></div></div>
+    </section>
+    <section class="view" id="view-timetable" hidden>
+      <div class="head"><h1>My timetable</h1><p id="ttSubtitle"></p></div>
+      <div class="card">
+        <div class="toolbar"><div class="field"><label for="ttSearch">Search timetable</label><input id="ttSearch" type="search" placeholder="Course, room or teacher…"></div><button class="btn ghost" id="exportTimetable" type="button">Export CSV</button><button class="btn ghost" id="printTimetable" type="button">Print</button></div>
+        <div class="week" id="weekGrid"></div>
+      </div>
+    </section>
+    <section class="view" id="view-announcements" hidden>
+      <div class="head"><h1>Announcements</h1><p>Updates for you from your teachers.</p></div>
+      <div class="card"><div class="field"><label for="annSearch">Search announcements</label><input id="annSearch" type="search" placeholder="Search title or message…"></div><div class="list" id="annList"></div></div>
+    </section>
+    <section class="view" id="view-profile" hidden>
+      <div class="head"><h1>Profile</h1></div>
+      <div class="card"><dl class="kv" id="profileList"></dl></div>
+    </section>
+  </main>
+</div>
+<script type="module" src="../js/student.js"></script>
+</body></html>

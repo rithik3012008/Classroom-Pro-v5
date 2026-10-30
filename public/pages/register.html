@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><title>Register — Classroom Pro</title><meta name="robots" content="noindex">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="../icon.svg" type="image/svg+xml"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="../css/app.css">
+</head>
+<body>
+<div class="auth">
+  <aside class="auth-art"><a class="brand" href="../index.html"><span class="brand-mark">C</span>Classroom Pro</a><div><h2>Your classes, always in sync.</h2><p>Timetables, courses and announcements for students and teachers.</p></div><ul><li>✓ Clash-free scheduling</li><li>✓ Student and teacher dashboards</li><li>✓ Secured by Firebase</li></ul></aside>
+  <main class="auth-main"><section class="auth-card">
+    <div><h1>Create your account</h1><p class="sub">Choose how you'll use Classroom Pro.</p></div>
+    <div class="switch" role="group" aria-label="Register as">
+      <button type="button" id="roleStudent" aria-pressed="true">🎓 Register as Student</button>
+      <button type="button" id="roleTeacher" aria-pressed="false">🧑‍🏫 Register as Teacher</button>
+    </div>
+    <div id="configBanner" class="banner" hidden>Firebase setup needed: paste your Web app config into <code>public/js/config.js</code>, then enable Email/Password in Firebase Authentication.</div>
+    <div id="formMsg" class="msg" role="alert" hidden></div>
+    <form id="registerForm" novalidate>
+      <div class="grid">
+        <div class="field full"><label for="fullName">Full name</label><input id="fullName" name="fullName" autocomplete="name" maxlength="80" required></div>
+        <div class="field" data-student><label for="rollNo">Roll number</label><input id="rollNo" name="rollNo" maxlength="30"></div>
+        <div class="field" data-student><label for="year">Year</label><select id="year" name="year"></select></div>
+        <div class="field full"><label for="department">Department</label><select id="department" name="department" required></select></div>
+        <div class="field full"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required placeholder="you@college.edu"></div>
+        <div class="field"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="new-password" minlength="8" required><small>At least 8 characters</small></div>
+        <div class="field"><label for="confirm">Confirm password</label><input id="confirm" name="confirm" type="password" autocomplete="new-password" required></div>
+      </div>
+      <button class="btn primary block" type="submit" id="submitBtn">Create student account</button>
+    </form>
+    <div class="links"><a href="login.html">Already registered? Sign in</a><a href="../index.html">← Home</a></div>
+  </section></main>
+</div>
+<script type="module" src="../js/register.js"></script>
+</body></html>
